@@ -1,35 +1,86 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { Component } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
-  
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+const tasks = [
+  {
+    id: 1,
+    title: "Do home work",
+    description: "You must do it",
+    is_completed: true,
+  },
+  {
+    id: 2,
+    title: "Repair the nuclear",
+    description: "to iran",
+    is_completed: false,
+  },
+  {
+    id: 3,
+    title: "Make at missile",
+    description: "You must do it",
+    is_completed: true,
+  },
+];
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      viewCompleted: true,
+      taskList: tasks,
+    };
+  }
+
+  displayCompleted = (status) => {
+    if (status) {
+      return this.setstatus({ viewCompleted: true });
+    } else {
+      return this.setstatus({ viewCompleted: false });
+    }
+  };
+
+  renderTabList = () => {
+    return (
+      <div className="flex justify-center">
+        <span
+          onClick={() => this.displayCompleted(true)}
+          className={this.state.viewCompleted ? "active" : ""}
+        >
+          completed
+        </span>
+        <span
+          onClick={() => this.displayCompleted(false)}
+          className={this.state.viewCompleted ? "" : "active"}
+        >
+          In completed
+        </span>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    );
+  };
+
+  renderItems = () => {
+    const { viewCompleted } = this.state;
+    const newItems = this.state.taskList.filter(
+      (item) => item.is_completed === viewCompleted
+    );
+    return newItems.map((item) => (
+      <li key={item.id}>
+        <span>{item.title}</span>
+      </li>
+    ));
+  };
+
+  render() {
+    return (
+      <main className="m-10">
+        <h1 className="uppercase text-4xl text-center">Task manager</h1>
+        <div className="p-2 bg-slate-800 text-white font-bold w-[110px] text-center rounded cursor-pointer">
+          Add task
+        </div>
+        <div className="flex items-start mt-6">{this.renderTabList()}</div>
+        <ul className="">{this.renderItems}</ul>
+      </main>
+    );
+  }
 }
 
-export default App
+export default App;
